@@ -8,13 +8,13 @@ var model = {
 
 var api = {
   root: "https://api.themoviedb.org/3",
-  token: "TODO", // TODO 0 add your api key
+  token: "2de393df0ad479df19285e7b239a8879", // TODO 0 add your api key
   /**
    * Given a movie object, returns the url to its poster image
    */
   posterUrl: function(movie) {
     var baseImageUrl = "http://image.tmdb.org/t/p/w300/";
-    return baseImageUrl + movie.poster_path; 
+    return baseImageUrl + movie.poster_path;
   }
 }
 
@@ -26,11 +26,9 @@ var api = {
  * the callback function that was passed in
  */
 
-// TODO 1
 // this function should accept a second argument, `keywords`
-function discoverMovies(callback) {
+function discoverMovies(callback, keywords) {
 
-  // TODO 2 
   // ask the API for movies related to the keywords that were passed in above
   // HINT: add another key/value pair to the `data` argument below
 
@@ -38,6 +36,7 @@ function discoverMovies(callback) {
     url: api.root + "/discover/movie",
     data: {
       api_key: api.token,
+      with_keywords: keywords,
     },
     success: function(response) {
       model.browseItems = response.results;
@@ -48,14 +47,14 @@ function discoverMovies(callback) {
 
 
 /**
- * Makes an AJAX request to the /search/keywords endpoint of the API, using the 
+ * Makes an AJAX request to the /search/keywords endpoint of the API, using the
  * query string that was passed in
  *
  * if successful, invokes the supplied callback function, passing in
  * the API's response.
  */
 function searchMovies(query, callback) {
-  // TODO 3
+
   // change the url so that we search for keywords, not movies
 
 
@@ -68,36 +67,36 @@ function searchMovies(query, callback) {
   // `.id` values of each of the objects inside reponse.results
   // HINT use the array map function to map over response.results
 
-
-  // TODO 4b
-  // create a new variable called keywordsString by converting 
+  // create a new variable called keywordsString by converting
   // the array of ids to a comma-separated string, e.g.
   //      "192305,210090,210092,210093"
   // HINT: use the Array join function
 
 
-  // TODO 4c
   // instead of a comma-separated string, we want the ids
   // to be spearated with the pipe "|" character, eg:
   //     "192305|210090|210092|210093"
   // HINT: pass an argument to the join function
 
-
-  // TODO 4d
-  // when the response comes back, call discoverMovies, 
+  // when the response comes back, call discoverMovies,
   // passing along 2 arguments:
-  // 1) the callback 
+  // 1) the callback
   // 2) the string of keywords
 
 
   $.ajax({
-    url: api.root + "/search/movie",
+    url: api.root + "/search/keyword",
     data: {
       api_key: api.token,
-      query: query
+      with_keywords: query
     },
     success: function(response) {
-      console.log(response);
+      console.log(
+        keywordString = response.results.map(function(item){
+          return item.id;
+        }).join('|');
+        discoverMovies(callback,)
+      );
     }
   });
 }
@@ -115,7 +114,7 @@ function render() {
   // render watchlist items
   model.watchlistItems.forEach(function(movie) {
     var title = $("<h6></h6>").text(movie.original_title);
-      
+
     // movie poster
     var poster = $("<img></img>")
       .attr("src", api.posterUrl(movie))
@@ -135,7 +134,7 @@ function render() {
     var panelHeading = $("<div></div>")
       .attr("class", "panel-heading")
       .append(title);
-    
+
     // panel body contains the poster and button
     var panelBody = $("<div></div>")
       .attr("class", "panel-body")
@@ -168,7 +167,7 @@ function render() {
     var itemView = $("<li></li>")
       .attr("class", "list-group-item")
       .append( [title, overview, button] );
-      
+
     // append the itemView to the list
     $("#section-browse ul").append(itemView);
   });
