@@ -36,7 +36,7 @@ function discoverMovies(callback, keywords) {
     url: api.root + "/discover/movie",
     data: {
       api_key: api.token,
-      with_keywords: keywords,
+      with_keywords: keywords
     },
     success: function(response) {
       model.browseItems = response.results;
@@ -88,14 +88,14 @@ function searchMovies(query, callback) {
     url: api.root + "/search/keyword",
     data: {
       api_key: api.token,
-      with_keywords: query
+      query: query
     },
     success: function(response) {
       console.log(
         keywordString = response.results.map(function(item){
           return item.id;
         }).join('|');
-        discoverMovies(callback,)
+        discoverMovies(callback,keywordString)
       );
     }
   });
